@@ -1,35 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [todoText, setTodoText] = useState("");
+  const [todoList, setTodoList] = useState([]);
+
+  const addTodo = (text) => {
+    setTodoList((prevTodos) => [...prevTodos, text]);
+    setTodoText("");
+  };
+
+  const deleteTodo = (id) => {
+    const newList = todoList.filter((todo, index) => id !== index);
+    setTodoList(newList);
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="flex items-center justify-center h-screen flex-col gap-10">
+        <div className="text-4xl">TODO APP</div>
+        <div className="flex gap-3">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              addTodo(todoText);
+            }}
+          >
+            <input
+              type="text"
+              placeholder="add todo..."
+              value={todoText}
+              onChange={(e) => setTodoText(e.target.value)}
+            />
+            <button className="p-2 border rounded-2xl" type="submit">
+              Add
+            </button>
+          </form>
+        </div>
+        {todoList?.map((todo, index) => (
+          <div key={index}>
+            {todo}
+            <button
+              onClick={() => {
+                deleteTodo(index);
+              }}
+              className="ml-3"
+            >
+              x
+            </button>
+          </div>
+        ))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
